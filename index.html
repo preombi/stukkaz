@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estoque - Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+    <h1 id="titulo"><i class="fa-solid fa-layer-group"></i> Stukkaz</h1>
+    <section id="menuIn">
+        <button type="button" id="btn-menu" onclick="menu()"><i class="fa-solid fa-bars" style="margin-right: 10px;"></i><span>Menu</span></button>
+        <aside class="btn" id="aside">
+            <nav>
+                <ul>
+                    <li id="liIn"><a href="#inicio" onclick="mostrarInicio(); return false"><i class="fa-solid fa-house"></i>Início</a></li>
+                    <li id="liAd"><a href="#adicionar" onclick="mostrarAdicionar()"><i class="fa-solid fa-plus"></i> Adicionar produto</a></li>
+                    <li id="liPe"><a href="#pesquisarProduto" onclick="mostrarPesquisa()"><i class="fa-solid fa-magnifying-glass"></i> Pesquisar produto</a></li>
+                    <li id="liEn"><a href="#entrada" onclick="mostrarEntrada()"><i class="fa-solid fa-arrow-down"></i> Entrada de produto</a></li>
+                    <li id="liSa"><a href="#saida" onclick="mostrarSaida()"><i class="fa-solid fa-arrow-up"></i> Saída de produto</a></li>
+                </ul>
+            </nav>
+        </aside>
+    </section>
+    <h2 id="subtitulo">Sistema de Estoque</h2>
+    
+    <main>
+        <div class="totalProdutos">
+            <h3>Total de Produtos</h3>
+        </div>
+        <div class="estoqueUnidades">
+            <h3>Unidades em Estoque</h3>
+        </div>
+        <div class="estoqueBaixo">
+            <h3>Estoque Baixo</h3>
+            <button type="button" id="verMaisEstoque" hidden>Ver mais</button>
+        </div>
+        <div class="estoqueTotal">
+            <h3>Valor Total em Estoque</h3>
+        </div>
+    </main>
+
+    <section id="inicio">
+        <h2 id="tituloDashboard">Dashboard</h2>
+        <p id="avisoGraficos" hidden>Para carregar os gráficos, conecte-se à internet e atualize a página.</p>
+        <div class="paineis">
+            <article>
+                <h3>Produtos por Categoria</h3>
+                <div class="grafico">
+                    <canvas id="graficoCategorias"></canvas>
+                </div>
+            </article>
+            <article>
+                <h3>Produtos mais vendidos</h3>
+                <label for="mesVendas">Mês das vendas:</label>
+                <input type="month" id="mesVendas" onchange="mostrarVendas()">
+                <div class="grafico">
+                    <canvas id="graficoVendas"></canvas>
+                </div>
+                <p id="semVendas">Nenhuma venda registrada neste mês.</p>
+            </article>
+        </div>
+        <article class="historico">
+            <h3>Histórico de movimentações</h3>
+            <label for="diaHistorico">Consultar dia:</label>
+            <input type="date" id="diaHistorico" onchange="mostrarHistorico()">
+            <ul id="listaHistorico"></ul>
+        </article>
+    </section>
+
+    <section id="adicionar" hidden>
+        <h2>Adicionar Produto</h2>
+        <p>
+            <label for="adCategoria">Categoria:</label><br>
+            <select name="adCategoria" id="adCategoria" required>
+                <option value="">--Selecione--</option>
+                <option value="Acessório">Acessório</option>
+                <option value="Artesanato">Artesanato</option>
+                <option value="Brinquedo">Brinquedo</option>
+                <option value="Decoração">Decoração</option>
+                <option value="Eletrônico">Eletrônico</option>
+                <option value="Escolar">Escolar</option>
+                <option value="Escritorio">Escritório</option>  
+            </select>
+        </p>
+        <p>
+            <label for="adCodigo">Código:</label><br>
+            <input type="text" id="adCodigo" pattern="[A-Za-z0-9]+" required>
+        </p>
+        <p>
+            <label for="adNome">Nome:</label><br>
+            <input type="text" id="adNome" required>
+        </p>
+        <p>
+            <label for="adPreco">Preço:</label><br>
+            <input type="number" id="adPreco" required>
+        </p>
+        <p>
+            <label for="adQuantidade">Quantidade:</label><br>
+            <input type="number" id="adQuantidade" required>
+        </p>
+        <input type="button" value="Adicionar" onclick="adicionar()">
+    </section>
+
+    <section id="pesquisarProduto" hidden>
+        <h2>Pesquisar produto</h2>
+        <div style="max-width: 100%; margin: 0 auto;">
+            <div class="busca">
+                <p>
+                    <h3 id="listaCadastrados">Lista de produtos cadastrados:</h3>
+                    <input type="search" id="pesquisar" placeholder="Digite o nome ou código do produto">
+                    <input type="button" value="Pesquisar" onclick="pesquisar()" style="margin-top: 16px;">
+                </p>
+            </div>
+            <div>
+                <div id="areaListaProdutos">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nome</th>
+                                <th>Preço</th>
+                                <th>Quantidade</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listaProdutos"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="entrada" hidden>
+        <h2>Entrada de produtos</h2>
+        <p>
+            <label for="entradaCodigo">Código do produto:</label><br>
+            <input type="text" id="entradaCodigo" pattern="[A-Za-z0-9]+" required>
+        </p>
+        <p>
+            <label for="entradaQuantidade">Quantidade de entrada:</label><br>
+            <input type="number" id="entradaQuantidade" required>
+        </p>
+        <input type="button" value="Entrada" onclick="entrada()">
+    </section>
+
+    <section id="saida" hidden>
+        <h2>Saída de produtos</h2>
+        <p>
+            <label for="saidaCodigo">Código do produto:</label><br>
+            <input type="text" id="saidaCodigo" pattern="[A-Za-z0-9]+" required>
+        </p>
+        <p>
+            <label for="saidaQuantidade">Quantidade de saída:</label><br>
+            <input type="number" id="saidaQuantidade" required>
+        </p>
+        <input type="button" value="Registrar" onclick="saida()">
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/script.js"></script>
+
+    <footer>
+        <p>&copy; Stukkaz</p>
+    </footer>
+</body>
+</html>
